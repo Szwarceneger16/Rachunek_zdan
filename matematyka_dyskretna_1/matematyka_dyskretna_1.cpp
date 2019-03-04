@@ -1,19 +1,16 @@
 ﻿#include "pch.h"
+#include <stdlib.h>
 #include <iostream>
 #include <string>
 #include <fstream>
 
-
-#define DBG 0
+#define DBG 1
 
 using namespace std;
 
 string wejscie;
-
 bool** tabelaprawdy;
-
-short zw_1[8], zw_2[8], zw_3[8];
-short wym_W, wym_K,przypadek, ilosc_false = -1;
+short wym_W, wym_K,przypadek,rodz_litera,ilosc_P, ilosc_Q, ilosc_R;
 
 bool plik_oblsuga(void)
 {
@@ -72,22 +69,14 @@ inline void negacja(short &a,int &przebieg,short &przy,int &litera, bool** &tabe
 	przebieg += 1;
 }
 
-bool** oblicz_wymiar()
+bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzupelniona
 {
-
-}
-
-bool rachunek_logiczny(void)
-{
-	bool neg;
-	short rodz_litera = 10,litera = 0;
-	int aski, aski1, askiN, askiL, askiP,dodajaca, ilosc_dzial = 0,ilosc_P = 0, ilosc_Q = 0, ilosc_R = 0;
-	if (wejscie.length() < 1) { return false; }
+	int aski;
+	short ilosc_dzial = 0;
 
 	for (int i = (wejscie.length() - 1); i >= 0; i--)
 	{
 		aski = wejscie[i];
-
 		if (aski == 80 || aski == 112) { ilosc_P += 1; }
 		else if (aski == 81 || aski == 113) { ilosc_Q += 1; }
 		else if (aski == 82 || aski == 114) { ilosc_R += 1; }
@@ -101,27 +90,38 @@ bool rachunek_logiczny(void)
 	else if (ilosc_P == 0 && ilosc_Q != 0 && ilosc_R != 0) { wym_W = 4; przypadek = 3; } // QR
 	else { wym_W = 8; }
 	wym_K = ilosc_dzial + !!ilosc_P + !!ilosc_Q + !!ilosc_R;
-	int przebieg = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
-	if (wejscie[0] != 78 && wejscie[0] != 110) { wym_K += 1; przebieg += 1; }
-
-	//tworzenie tablicy dynamicznej
 	bool** tabelaprawdy = new bool*[wym_K];
 	for (int i = 0; i < wym_W; i++) { tabelaprawdy[i] = new bool[wym_W]; }
 
 	if (wym_W == 2) {
 		tabelaprawdy[0][0] = 1; tabelaprawdy[1][0] = 0; rodz_litera = 0;
-	} else if (wym_W == 4) {
+	}
+	else if (wym_W == 4) {
 		tabelaprawdy[0][0] = 0; tabelaprawdy[1][0] = 0; tabelaprawdy[2][0] = 1; tabelaprawdy[3][0] = 1;
 		tabelaprawdy[0][1] = 0; tabelaprawdy[1][1] = 1; tabelaprawdy[2][1] = 0; tabelaprawdy[3][1] = 1;
-	} else {
+	}
+	else {
 		tabelaprawdy[0][0] = 0; tabelaprawdy[1][0] = 0; tabelaprawdy[2][0] = 1; tabelaprawdy[3][0] = 1; tabelaprawdy[4][0] = 0; tabelaprawdy[5][0] = 0; tabelaprawdy[6][0] = 1; tabelaprawdy[7][0] = 1;
 		tabelaprawdy[0][1] = 0; tabelaprawdy[1][1] = 1; tabelaprawdy[2][1] = 0; tabelaprawdy[3][1] = 1; tabelaprawdy[4][1] = 0; tabelaprawdy[5][1] = 1; tabelaprawdy[6][1] = 0; tabelaprawdy[7][1] = 1;
 		tabelaprawdy[0][2] = 0; tabelaprawdy[1][2] = 0; tabelaprawdy[2][2] = 0; tabelaprawdy[3][2] = 0; tabelaprawdy[4][2] = 1; tabelaprawdy[5][2] = 1; tabelaprawdy[6][2] = 1; tabelaprawdy[7][2] = 1;
 	}
+	return tabelaprawdy;
+}
+
+bool rachunek_logiczny(bool** tabelaprawdy)
+{
+	bool neg;
+	short rodz_litera = 10,litera = 0;
+	int aski, aski1, askiN, askiL, askiP, dodajaca;
+	if (wejscie.length() < 1) { return false; }
+
+	int przebieg = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
 	if (wejscie[0] != 78 && wejscie[0] != 110)
 	{
+		wym_K += 1; 
+		przebieg += 1;
 		if (przypadek == 1 || przypadek == 2) {
 			if (wejscie[0] == 80 || wejscie[0] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][0]; }
 			else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][1]; }
@@ -133,7 +133,7 @@ bool rachunek_logiczny(void)
 		}
 		else
 		{
-			if (wejscie[0] == 820 || wejscie[0] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][0]; }
+			if (wejscie[0] == 80 || wejscie[0] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][0]; }
 			else if (wejscie[0] == 81 || wejscie[0] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][1]; }
 			else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][2]; }
 		}
@@ -258,7 +258,6 @@ bool rachunek_logiczny(void)
 			else
 			{
 				if (rodz_litera != 0)
-
 				{
 					if (przypadek == 1 || przypadek == 2) {
 						if (askiP == 80 || askiP == 112) { litera = 0; }
@@ -334,49 +333,22 @@ bool rachunek_logiczny(void)
 #endif
 	}
 
-	podglad_tabeli_dbg(tabelaprawdy);
-
 	short ilosc_zmiennych = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 	for (short j = 0; j < wym_W; j++)
 	{
 		if (tabelaprawdy[j][wym_K - 1] == 0) { break; }
-		if (j == wym_W - 1) 
-		{ 
-			for (int i = 0; i < wym_W; i++) { delete tabelaprawdy[i]; }
-			delete tabelaprawdy;
-			return true; 
-		}
+		if (j == wym_W - 1) { return true; }
 	}
-	//wykonuje sie jesli false
-	for (short j = 0; j < wym_W; j++)
-	{
-		if (tabelaprawdy[j][wym_K-1] == 0) 
-		{
-			ilosc_false += 1;
-			if (ilosc_zmiennych == 1) { zw_1[ilosc_false] = tabelaprawdy[j][0]; }
-			else if (ilosc_zmiennych == 2) {
-				zw_1[ilosc_false] = tabelaprawdy[j][0];
-				zw_2[ilosc_false] = tabelaprawdy[j][1];
-			} else {
-				zw_1[ilosc_false] = tabelaprawdy[j][0];
-				zw_2[ilosc_false] = tabelaprawdy[j][1];
-				zw_3[ilosc_false] = tabelaprawdy[j][2];
-			}
-		}
-	}
-
-	for (int i = 0; i < wym_W; i++) { delete tabelaprawdy[i]; }
-	delete tabelaprawdy;
 	return false;
 }
 
 int main()
 {
-	short h = 0;
-	
 	cin >> wejscie;
+
+	bool** temp = utworz_tablice();
 	
-	if (rachunek_logiczny() == true) 
+	if (rachunek_logiczny(temp) == true) 
 	{
 		cout << endl;
 		cout << " Podane zdanie logiczne jest tautologią !" << endl;
@@ -385,22 +357,24 @@ int main()
 	else
 	{
 		cout << "Podane zdanie logiczne nie jest tatuologią dla: " << endl;
-		if (wym_W == 2) { for (short i = 0; i <= ilosc_false; i++) cout << "P= " << zw_1[i] << endl; }
-		else if (wym_W == 4)
+		for (short j = 0; j < wym_W; j++)
 		{
-			if (przypadek == 1) { for (short i = 0; i <= ilosc_false; i++) cout << "P= " << zw_1[i] << ", Q= " << zw_2[i] << endl; }
-			else if (przypadek == 2) { for (short i = 0; i <= ilosc_false; i++) cout << "P= " << zw_1[i] << ", R= " << zw_2[i] << endl; }
-			else { for (short i = 0; i <= ilosc_false; i++) cout << "Q= " << zw_1[i] << ", R= " << zw_2[i] << endl; }
-		}
-		else
-		{
-			for (short i = 0; i <= ilosc_false; i++)
+			if (temp[j][wym_K - 1] == 0)
 			{
-				cout << "P= " << zw_1[i] << ", Q= " << zw_2[i] << ", R= " << zw_3[i];
+				if (wym_W == 2) { cout << "P= " << temp[j][0] << endl; }
+				else if (wym_W == 4) 
+				{ 
+					if (przypadek == 1) { cout << "P= " << temp[j][0] << ", Q= " << temp[j][1] << endl; }
+					else if (przypadek == 2) { cout << "P= " << temp[j][0] << ", R= " << temp[j][1] << endl; }
+					else { cout << "Q= " << temp[j][0] << ", R= " << temp[j][1] << endl; }
+				}
+				else { cout << "P= " << temp[j][0] << ", Q= " << temp[j][1] << ", R= " << temp[j][2] << endl; }
 			}
 		}
-
 	}
+
+	for (int i = 0; i < wym_W; i++) { delete temp[i]; }
+	delete temp;
 
 	cout << "Program autorstwa Grzegorz Szwarc" << endl;
 	system("pause");

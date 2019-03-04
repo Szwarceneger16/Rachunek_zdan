@@ -72,7 +72,7 @@ inline void negacja(short &a,int &przebieg,short &przy,int &litera, bool** &tabe
 bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzupelniona
 {
 	int aski;
-	short ilosc_dzial = 0;
+	short ilosc_dzialan = 0;
 
 	for (int i = (wejscie.length() - 1); i >= 0; i--)
 	{
@@ -80,16 +80,17 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 		if (aski == 80 || aski == 112) { ilosc_P += 1; }
 		else if (aski == 81 || aski == 113) { ilosc_Q += 1; }
 		else if (aski == 82 || aski == 114) { ilosc_R += 1; }
-		else if (aski == 78 || aski == 110 || aski == 68 || aski == 100 || aski == 67 || aski == 99 || aski == 73 || aski == 105 || aski == 69 || aski == 101) { ilosc_dzial += 1; }
+		else if (aski == 78 || aski == 110 || aski == 68 || aski == 100 || aski == 67 || aski == 99 || aski == 73 || aski == 105 || aski == 69 || aski == 101) { ilosc_dzialan += 1; }
 	}
-	if (ilosc_dzial == 0) { return false; }
+	if (ilosc_dzialan == 0) { return false; }
+	cout << ilosc_dzialan << endl;
 
 	if (ilosc_P != 0 && ilosc_Q == 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q != 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q == 0 && ilosc_R != 0) { wym_W = 2; przypadek = 1; }
 	else if (ilosc_P != 0 && ilosc_Q != 0 && ilosc_R == 0) { wym_W = 4; przypadek = 1; } // PQ
 	else if (ilosc_P != 0 && ilosc_Q == 0 && ilosc_R != 0) { wym_W = 4; przypadek = 2; } // PR
 	else if (ilosc_P == 0 && ilosc_Q != 0 && ilosc_R != 0) { wym_W = 4; przypadek = 3; } // QR
 	else { wym_W = 8; }
-	wym_K = ilosc_dzial + !!ilosc_P + !!ilosc_Q + !!ilosc_R;
+	wym_K = ilosc_dzialan + !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
 	bool** tabelaprawdy = new bool*[wym_K];
 	for (int i = 0; i < wym_W; i++) { tabelaprawdy[i] = new bool[wym_W]; }
@@ -329,7 +330,7 @@ bool rachunek_logiczny(bool** tabelaprawdy)
 			break;
 		}
 #if DBG==1 
-		podglad_tabeli_dbg(tabelaprawdy);
+		if (i%2 == 1)podglad_tabeli_dbg(tabelaprawdy);
 #endif
 	}
 

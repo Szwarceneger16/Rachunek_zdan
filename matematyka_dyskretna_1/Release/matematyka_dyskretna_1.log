@@ -1,11 +1,11 @@
 ﻿  matematyka_dyskretna_1.cpp
-c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(146): warning C4018: '<': signed/unsigned mismatch
-c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(114): warning C4101: 'neg': unreferenced local variable
-c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(116): warning C4101: 'dodajaca': unreferenced local variable
-c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(116): warning C4101: 'askiN': unreferenced local variable
-c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(116): warning C4101: 'aski': unreferenced local variable
-c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(354): warning C4566: character represented by universal-character-name '\u0105' cannot be represented in the current code page (1252)
-c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(359): warning C4566: character represented by universal-character-name '\u0105' cannot be represented in the current code page (1252)
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(147): warning C4018: '<': signed/unsigned mismatch
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(115): warning C4101: 'neg': unreferenced local variable
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(117): warning C4101: 'dodajaca': unreferenced local variable
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(117): warning C4101: 'askiN': unreferenced local variable
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(117): warning C4101: 'aski': unreferenced local variable
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(355): warning C4566: character represented by universal-character-name '\u0105' cannot be represented in the current code page (1252)
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(360): warning C4566: character represented by universal-character-name '\u0105' cannot be represented in the current code page (1252)
   Generating code
   1 of 110 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation

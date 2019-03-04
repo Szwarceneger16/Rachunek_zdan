@@ -1,11 +1,13 @@
 ﻿  matematyka_dyskretna_1.cpp
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(135): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(71): warning C4101: "neg": lokalna zmienna, do której nie istnieje odwołanie
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(73): warning C4101: "dodajaca": lokalna zmienna, do której nie istnieje odwołanie
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(73): warning C4101: "askiN": lokalna zmienna, do której nie istnieje odwołanie
-  Trwa generowanie kodu
-  2 of 109 functions ( 1.8%) were compiled, the rest were copied from previous compilation.
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(146): warning C4018: '<': signed/unsigned mismatch
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(82): warning C4101: 'neg': unreferenced local variable
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(84): warning C4101: 'dodajaca': unreferenced local variable
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(84): warning C4101: 'askiN': unreferenced local variable
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(382): warning C4566: character represented by universal-character-name '\u0105' cannot be represented in the current code page (1252)
+c:\users\gszwa\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(387): warning C4566: character represented by universal-character-name '\u0105' cannot be represented in the current code page (1252)
+  Generating code
+  1 of 109 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
-  Zakończono generowanie kodu
-  matematyka_dyskretna_1.vcxproj -> C:\Users\Grzesiek\source\repos\matematyka_dyskretna_1\Release\matematyka_dyskretna_1.exe
+  Finished generating code
+  matematyka_dyskretna_1.vcxproj -> C:\Users\GSzwa\source\repos\matematyka_dyskretna_1\Release\matematyka_dyskretna_1.exe

@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include <iostream>
 #include <string>
+#include <fstream>
+
 
 #define DBG 0
 
@@ -13,6 +15,10 @@ bool** tabelaprawdy;
 short zw_1[8], zw_2[8], zw_3[8];
 short wym_W, wym_K,przypadek, ilosc_false = -1;
 
+bool plik_oblsuga(void)
+{
+	
+}
 
 void podglad_tabeli_dbg(bool** &tabelaprawdy)
 {
@@ -64,6 +70,11 @@ inline void negacja(short &a,int &przebieg,short &przy,int &litera, bool** &tabe
 		}
 	}
 	przebieg += 1;
+}
+
+bool** oblicz_wymiar()
+{
+
 }
 
 bool rachunek_logiczny(void)
@@ -329,12 +340,17 @@ bool rachunek_logiczny(void)
 	for (short j = 0; j < wym_W; j++)
 	{
 		if (tabelaprawdy[j][wym_K - 1] == 0) { break; }
-		if (j == wym_W - 1) { return true; }
+		if (j == wym_W - 1) 
+		{ 
+			for (int i = 0; i < wym_W; i++) { delete tabelaprawdy[i]; }
+			delete tabelaprawdy;
+			return true; 
+		}
 	}
 	//wykonuje sie jesli false
 	for (short j = 0; j < wym_W; j++)
 	{
-		if (tabelaprawdy[j][wym_K - 1] == 0) 
+		if (tabelaprawdy[j][wym_K-1] == 0) 
 		{
 			ilosc_false += 1;
 			if (ilosc_zmiennych == 1) { zw_1[ilosc_false] = tabelaprawdy[j][0]; }
@@ -348,6 +364,9 @@ bool rachunek_logiczny(void)
 			}
 		}
 	}
+
+	for (int i = 0; i < wym_W; i++) { delete tabelaprawdy[i]; }
+	delete tabelaprawdy;
 	return false;
 }
 
@@ -366,20 +385,20 @@ int main()
 	else
 	{
 		cout << "Podane zdanie logiczne nie jest tatuologią dla: " << endl;
-		if (wym_W == 2) { for (short i = 0; i < ilosc_false; i++) cout << "P= " << zw_1[i] << endl; }
+		if (wym_W == 2) { for (short i = 0; i <= ilosc_false; i++) cout << "P= " << zw_1[i] << endl; }
 		else if (wym_W == 4)
 		{
-			if (przypadek == 1) { for (short i = 0; i < ilosc_false; i++) cout << "P= " << zw_1[i] << ", Q= " << zw_2[i] << endl; }
-			else if (przypadek == 2) { for (short i = 0; i < ilosc_false; i++) cout << "P= " << zw_1[i] << ", R= " << zw_2[i] << endl; }
-			else { for (short i = 0; i < ilosc_false; i++) cout << "Q= " << zw_1[i] << ", R= " << zw_2[i] << endl; }
+			if (przypadek == 1) { for (short i = 0; i <= ilosc_false; i++) cout << "P= " << zw_1[i] << ", Q= " << zw_2[i] << endl; }
+			else if (przypadek == 2) { for (short i = 0; i <= ilosc_false; i++) cout << "P= " << zw_1[i] << ", R= " << zw_2[i] << endl; }
+			else { for (short i = 0; i <= ilosc_false; i++) cout << "Q= " << zw_1[i] << ", R= " << zw_2[i] << endl; }
 		}
 		else
 		{
-			for (short i = 0; i < ilosc_false; i++)
+			for (short i = 0; i <= ilosc_false; i++)
 			{
 				cout << "P= " << zw_1[i] << ", Q= " << zw_2[i] << ", R= " << zw_3[i];
 			}
-	}
+		}
 
 	}
 

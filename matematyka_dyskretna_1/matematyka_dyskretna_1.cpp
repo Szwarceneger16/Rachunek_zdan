@@ -147,8 +147,8 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 	if (wejscie[0] != 78 && wejscie[0] != 110) { wym_K += 1; } // N
 
 	bool** tabelaprawdy;
-	tabelaprawdy = new bool*[wym_K];
-	for (int i = 0; i < wym_W; i++)  tabelaprawdy[i] = new bool[wym_W]; 
+	tabelaprawdy = new bool*[wym_W];
+	for (int i = 0; i < wym_W; i++)  tabelaprawdy[i] = new bool[wym_K]; 
 
 	if (wym_W == 2) {
 		tabelaprawdy[0][0] = 1; tabelaprawdy[1][0] = 0; rodz_litera = 0;

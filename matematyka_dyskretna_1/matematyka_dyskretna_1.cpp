@@ -1,24 +1,74 @@
 ﻿#include "pch.h"
 #include <stdlib.h>
 #include <iostream>
-#include <string>
 #include <fstream>
+#include <typeinfo>
+#include <string>
 
-#define DBG 1
+#define DBG 0
 
 using namespace std;
 
+const string nazwa_pliku = "badanie_zdań_logicznych.txt";
 string wejscie;
+string tryb;
 bool** tabelaprawdy;
-short wym_W, wym_K,przypadek,rodz_litera,ilosc_P, ilosc_Q, ilosc_R;
+short wym_W, wym_K,przypadek = 10,rodz_litera,ilosc_P, ilosc_Q, ilosc_R;
+bool tryb_zaawansowany = false;
 
-bool plik_oblsuga(void)
+
+bool pobierz_dane_plik(void)
 {
-	
+	fstream plik(nazwa_pliku, ios::in);
+	if (plik.good())
+	{
+		getline(plik, wejscie);
+		getline(plik, tryb);
+		if (!tryb.empty())
+		{
+			tryb = tryb[0];
+			if (stoi(tryb) == 1) { tryb_zaawansowany = true; }
+		}
+		plik.close();
+		return true;
+	}
+	plik.close();
+	return false;
+}
+
+void utworz_plik(void)
+{
+	fstream plik_wejsciowy(nazwa_pliku,ios::out);
+	plik_wejsciowy << "pcq" << endl << "0" <<endl;
+	plik_wejsciowy << "==============================================================================================================" << endl;
+	plik_wejsciowy << "Instrukcja wprowadzania danych do porgramu:" << endl;
+	plik_wejsciowy << "   W pierwszej linijce należy wprwadzić zdanie logiczne zgodnie z konwencją (np. pCq) ,wielkosc liter nie ma znaczneia "<< endl;
+	plik_wejsciowy << "   Czyli wymagana jest konstrukcja wprowadzonego zdania zmienna-dzialanie-zmienna-dzialanie-zmienna ..." << endl;
+	plik_wejsciowy << "   Każda zmienna może być poprzedzona negacją (np. NpCNq) . Program wykonuje działania w kolejności od lewej do prawej. " << endl;
+	plik_wejsciowy << "			LEGENDA działań: " << endl;
+	plik_wejsciowy << "   N (negation - negacja)" << endl;
+	plik_wejsciowy << "   D (disjunction - alternatywa) " << endl;
+	plik_wejsciowy << "   C (conjunction – koniunkcja)" << endl;
+	plik_wejsciowy << "   I (implication – implikacja)" << endl;
+	plik_wejsciowy << "   E (equivalence – równoważnośd)" << endl << endl;
+	plik_wejsciowy << "W drugiej linijce liczba decyduje o włączeniu trybu zawansowanego, powoduje to wyswietlenie tabeli prawdy" << endl;
+	plik_wejsciowy << "   0 (wyłączony tryb zaawansowany - domyślny)" << endl;
+	plik_wejsciowy << "   1 (włączony tryb zaawansowany)" << endl;
+	plik_wejsciowy.close();
+	return;
 }
 
 void podglad_tabeli_dbg(bool** &tabelaprawdy)
 {
+	cout << endl << endl;
+	if (wym_W == 2) { cout << "P  "<<endl; }
+	else if (wym_W == 8) { cout << "P  Q  R" << endl; }
+	else
+	{
+		if (przypadek == 1) { cout << "P  Q" << endl; }
+		else if (przypadek == 2) { cout << "P  R" << endl; }
+		else if (przypadek == 3) { cout << "Q  R" << endl; }
+	}
 	for (int i = 0; i < wym_W; i++)
 	{
 		for (int k = 0; k < wym_K; k++)
@@ -27,8 +77,7 @@ void podglad_tabeli_dbg(bool** &tabelaprawdy)
 		}
 		cout << endl;
 	}
-	cout << endl;
-	cout << endl;
+	cout << endl << endl;
 }
 
 inline void negacja(short &a,int &przebieg,short &przy,int &litera, bool** &tabelaprawdy) //liczba wierszy,ktore dzialanie z kolei, przypadek dla 2 litera, odniesienie do litery
@@ -82,18 +131,24 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 		else if (aski == 82 || aski == 114) { ilosc_R += 1; }
 		else if (aski == 78 || aski == 110 || aski == 68 || aski == 100 || aski == 67 || aski == 99 || aski == 73 || aski == 105 || aski == 69 || aski == 101) { ilosc_dzialan += 1; }
 	}
-	if (ilosc_dzialan == 0) { return false; }
-	cout << ilosc_dzialan << endl;
+	if (ilosc_dzialan == 0) { return NULL; }
 
-	if (ilosc_P != 0 && ilosc_Q == 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q != 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q == 0 && ilosc_R != 0) { wym_W = 2; przypadek = 1; }
+#if DBG 1
+	cout << ilosc_dzialan << endl;
+#endif
+
+	if (ilosc_P != 0 && ilosc_Q == 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q != 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q == 0 && ilosc_R != 0) { wym_W = 2; przypadek = 0; }
 	else if (ilosc_P != 0 && ilosc_Q != 0 && ilosc_R == 0) { wym_W = 4; przypadek = 1; } // PQ
 	else if (ilosc_P != 0 && ilosc_Q == 0 && ilosc_R != 0) { wym_W = 4; przypadek = 2; } // PR
 	else if (ilosc_P == 0 && ilosc_Q != 0 && ilosc_R != 0) { wym_W = 4; przypadek = 3; } // QR
 	else { wym_W = 8; }
 	wym_K = ilosc_dzialan + !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
-	bool** tabelaprawdy = new bool*[wym_K];
-	for (int i = 0; i < wym_W; i++) { tabelaprawdy[i] = new bool[wym_W]; }
+	if (wejscie[0] != 78 && wejscie[0] != 110) { wym_K += 1; } // N
+
+	bool** tabelaprawdy;
+	tabelaprawdy = new bool*[wym_K];
+	for (int i = 0; i < wym_W; i++)  tabelaprawdy[i] = new bool[wym_W]; 
 
 	if (wym_W == 2) {
 		tabelaprawdy[0][0] = 1; tabelaprawdy[1][0] = 0; rodz_litera = 0;
@@ -110,20 +165,19 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 	return tabelaprawdy;
 }
 
-bool rachunek_logiczny(bool** tabelaprawdy)
+bool rachunek_logiczny(bool** &tabelaprawdy)
 {
-	bool neg;
 	short rodz_litera = 10,litera = 0;
-	int aski, aski1, askiN, askiL, askiP, dodajaca;
+	int aski1, askiL, askiP;
 	if (wejscie.length() < 1) { return false; }
 
 	int przebieg = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
-	if (wejscie[0] != 78 && wejscie[0] != 110)
-	{
-		wym_K += 1; 
+	if (wejscie[0] != 78 && wejscie[0] != 110) // N
+	{ 
 		przebieg += 1;
-		if (przypadek == 1 || przypadek == 2) {
+		if (przypadek == 0) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][1] = tabelaprawdy[j][0]; }
+		else if (przypadek == 1 || przypadek == 2) {
 			if (wejscie[0] == 80 || wejscie[0] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][0]; }
 			else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][1]; }
 		}
@@ -144,7 +198,7 @@ bool rachunek_logiczny(bool** tabelaprawdy)
 	podglad_tabeli_dbg(tabelaprawdy);
 #endif
 
-	for (int i = 0; i < wejscie.length(); i++)
+	for (int i = 0; i < wejscie.length()-1; i++)
 	{
 		aski1 = wejscie[i];
 
@@ -239,6 +293,7 @@ bool rachunek_logiczny(bool** tabelaprawdy)
 					else { tabelaprawdy[j][przebieg] = 0; }
 				}
 			}
+			przebieg += 1;
 			break;
 		case 73:
 		case 105: //I ,=> - implikacja
@@ -325,10 +380,12 @@ bool rachunek_logiczny(bool** tabelaprawdy)
 					else { tabelaprawdy[j][przebieg] = 0; }
 				}
 			}
+			przebieg += 1;
 			break;
 		default:
 			break;
 		}
+
 #if DBG==1 
 		if (i%2 == 1)podglad_tabeli_dbg(tabelaprawdy);
 #endif
@@ -345,10 +402,23 @@ bool rachunek_logiczny(bool** tabelaprawdy)
 
 int main()
 {
-	cin >> wejscie;
+	setlocale(LC_CTYPE, ".1250");
+
+	if (pobierz_dane_plik() == false) 
+	{ 
+		utworz_plik();
+		return 0;
+	}
+
+#if DBG 1
+	cout << wejscie << endl;
+#endif
 
 	bool** temp = utworz_tablice();
-	
+
+	if (tryb_zaawansowany) { podglad_tabeli_dbg(temp); }
+
+
 	if (rachunek_logiczny(temp) == true) 
 	{
 		cout << endl;
@@ -374,9 +444,15 @@ int main()
 		}
 	}
 
-	for (int i = 0; i < wym_W; i++) { delete temp[i]; }
-	delete temp;
+	if (tryb_zaawansowany) { podglad_tabeli_dbg(temp); }
+
+	for (int i = 0; i < wym_W; i++) delete[] temp[i];
+
+	if (tryb_zaawansowany) { podglad_tabeli_dbg(temp); }
+
+	delete[] temp;
 
 	cout << "Program autorstwa Grzegorz Szwarc" << endl;
 	system("pause");
+	return 0;
 }

@@ -1,0 +1,17 @@
+pcrcq
+1
+==============================================================================================================
+Instrukcja wprowadzania danych do porgramu:
+   W pierwszej linijce nale¿y wprwadziæ zdanie logiczne zgodnie z konwencj¹ (np. pCq) ,wielkosc liter nie ma znaczneia 
+   Czyli wymagana jest konstrukcja wprowadzonego zdania zmienna-dzialanie-zmienna-dzialanie-zmienna ...
+   Ka¿da zmienna mo¿e byæ poprzedzona negacj¹ (np. NpCNq) . Program wykonuje dzia³ania w kolejnoœci od lewej do prawej. 
+			LEGENDA dzia³añ: 
+   N (negation - negacja)
+   D (disjunction - alternatywa) 
+   C (conjunction – koniunkcja)
+   I (implication – implikacja)
+   E (equivalence – równowa¿noœd)
+
+W drugiej linijce liczba decyduje o w³¹czeniu trybu zawansowanego, powoduje to wyswietlenie tabeli prawdy
+   0 (wy³¹czony tryb zaawansowany - domyœlny)
+   1 (w³¹czony tryb zaawansowany)

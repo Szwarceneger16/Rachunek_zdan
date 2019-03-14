@@ -1,5 +1,10 @@
 ﻿  matematyka_dyskretna_1.cpp
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(136): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(201): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(413): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(85): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(90): warning C4267: "return": konwersja z "size_t" do "short", możliwa utrata danych
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(221): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(241): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(394): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(363): warning C4101: "askiP": lokalna zmienna, do której nie istnieje odwołanie
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(363): warning C4101: "askiL": lokalna zmienna, do której nie istnieje odwołanie
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(444): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
   matematyka_dyskretna_1.vcxproj -> C:\Users\Grzesiek\source\repos\matematyka_dyskretna_1\Debug\matematyka_dyskretna_1.exe

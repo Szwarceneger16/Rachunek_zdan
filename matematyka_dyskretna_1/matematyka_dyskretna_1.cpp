@@ -6,14 +6,13 @@
 #include <string>
 
 #define DBG 0
-
 using namespace std;
 
 const string nazwa_pliku = "badanie_zdań_logicznych.txt";
 string wejscie;
 string tryb;
 bool** tabelaprawdy;
-short wym_W, wym_K,przypadek = 10,rodz_litera,ilosc_P, ilosc_Q, ilosc_R;
+short wym_W, wym_K,przypadek = 10,rodz_litera = 10,ilosc_P, ilosc_Q, ilosc_R;
 bool tryb_zaawansowany = false;
 
 
@@ -43,9 +42,9 @@ void utworz_plik(void)
 	plik_wejsciowy << "==============================================================================================================" << endl;
 	plik_wejsciowy << "Instrukcja wprowadzania danych do porgramu:" << endl;
 	plik_wejsciowy << "   W pierwszej linijce należy wprwadzić zdanie logiczne zgodnie z konwencją (np. pCq) ,wielkosc liter nie ma znaczneia "<< endl;
-	plik_wejsciowy << "   Czyli wymagana jest konstrukcja wprowadzonego zdania zmienna-dzialanie-zmienna-dzialanie-zmienna ..." << endl;
-	plik_wejsciowy << "   Każda zmienna może być poprzedzona negacją (np. NpCNq) . Program wykonuje działania w kolejności od lewej do prawej. " << endl;
-	plik_wejsciowy << "			LEGENDA działań: " << endl;
+	plik_wejsciowy << "   Czyli wymagana jest konstrukcja wprowadzonego zdania zmienna-dzialanie-zmienna-dzialanie-zmienna ... Każda zmienna może dodatkowo być poprzedzona negacją (np. NpCNq)" << endl;
+	plik_wejsciowy << "   Program nie obsługuje nawiasów, wykonuje diałania zgodnie z zasadami kolejnosci wykonywania, dla działań równorzednych od lewej do prawej. " << endl;
+	plik_wejsciowy << "		 LEGENDA działań: " << endl;
 	plik_wejsciowy << "   N (negation - negacja)" << endl;
 	plik_wejsciowy << "   D (disjunction - alternatywa) " << endl;
 	plik_wejsciowy << "   C (conjunction – koniunkcja)" << endl;
@@ -80,14 +79,25 @@ void podglad_tabeli_dbg(bool** &tabelaprawdy)
 	cout << endl << endl;
 }
 
-inline void negacja(short &a,int &przebieg,short &przy,int &litera, bool** &tabelaprawdy) //liczba wierszy,ktore dzialanie z kolei, przypadek dla 2 litera, odniesienie do litery
+short kolejnosc_dzialan(short start)
 {
-	if (a == 2) {
+	int aski;
+	for (int i = start; i < wejscie.length(); i++)
+	{
+		aski = wejscie[i];
+		if (aski == 69 || aski == 101 || aski == 73 || aski == 105) { return i; }
+	}
+	return wejscie.length()-1;
+}
+
+inline void negacja(short &przebieg,int &litera, bool** &tabelaprawdy) //liczba wierszy,ktore dzialanie z kolei, przypadek dla 2 litera, odniesienie do litery
+{
+	if (wym_W == 2) {
 		tabelaprawdy[0][przebieg] = !tabelaprawdy[0][0];
 		tabelaprawdy[1][przebieg] = !tabelaprawdy[1][0];
 	}
-	else if (a == 4) {
-		if (przy == 1 || przy == 2) { // PQ , PR
+	else if (wym_W == 4) {
+		if (przypadek == 1 || przypadek == 2) { // PQ , PR
 			if (litera == 80 || litera == 112) {
 				for (short i = 0; i < 4; i++) tabelaprawdy[i][przebieg] = !tabelaprawdy[i][0];
 			}
@@ -95,7 +105,7 @@ inline void negacja(short &a,int &przebieg,short &przy,int &litera, bool** &tabe
 				for (short i = 0; i < 4; i++) tabelaprawdy[i][przebieg] = !tabelaprawdy[i][1];
 			}
 		}
-		if (przy == 3) { // QR
+		if (przypadek == 3) { // QR
 			if (litera == 81 || litera == 113) {
 				for (short i = 0; i < 4; i++) tabelaprawdy[i][przebieg] = !tabelaprawdy[i][0];
 			}
@@ -133,7 +143,7 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 	}
 	if (ilosc_dzialan == 0) { return NULL; }
 
-#if DBG 1
+#if DBG == 1
 	cout << ilosc_dzialan << endl;
 #endif
 
@@ -145,6 +155,15 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 	wym_K = ilosc_dzialan + !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
 	if (wejscie[0] != 78 && wejscie[0] != 110) { wym_K += 1; } // N
+
+	short a= kolejnosc_dzialan(0);
+	while (true)
+	{
+		if (a == wejscie.length() - 1) { break; }
+		if (kolejnosc_dzialan(a+1) - a <= 1) { wym_K += 1; }
+		a = kolejnosc_dzialan(a+1);
+		if (a == wejscie.length()-1) { break; }
+	}
 
 	bool** tabelaprawdy;
 	tabelaprawdy = new bool*[wym_W];
@@ -165,13 +184,132 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 	return tabelaprawdy;
 }
 
+void wykonaj_F(bool** tabelaprawdy,bool NEG,short lewa_wspol,short prawa_wspol,short wynik,int &askiP,short przebieg,short litera)
+{
+	if (NEG == false)
+	{
+		if (rodz_litera != 0)
+		{
+			if (przypadek == 1 || przypadek == 2) {
+				if (askiP == 80 || askiP == 112) { litera = 0; }
+				else { litera = 1; }
+			}
+			else if (przypadek == 3)
+			{
+				if (askiP == 81 || askiP == 113) { litera = 0; }
+				else { litera = 1; }
+			}
+			else
+			{
+				if (askiP == 820 || askiP == 112) { litera = 0; }
+				else if (askiP == 81 || askiP == 113) { litera = 1; }
+				else { litera = 2; }
+			}
+		}
+			for (short j = 0; j < wym_W; j++)
+			{
+				if ((tabelaprawdy[j][przebieg - 1] == lewa_wspol) && (tabelaprawdy[j][litera] == prawa_wspol)) { tabelaprawdy[j][przebieg] = wynik; }
+				else { tabelaprawdy[j][przebieg] = abs(wynik - 1); }
+			}
+	}
+	else
+	{
+		negacja(przebieg, askiP, tabelaprawdy);
+			for (short m = 0; m < wym_W; m++)
+			{
+				if (tabelaprawdy[m][przebieg - 2] == lewa_wspol && tabelaprawdy[m][przebieg - 1] == prawa_wspol) { tabelaprawdy[m][przebieg] = wynik; }
+				else { tabelaprawdy[m][przebieg] = abs(wynik - 1); }
+			}
+	}
+}
+
+bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera)
+{
+	int askiP, askiL;
+	short i;
+	for (i = a; i <= b; i++)
+	{
+		int aski1 = wejscie[i];
+
+		switch (aski1)
+		{
+		case 78:
+		case 110: //N ,~ - negacja
+			askiP = wejscie[i + 1];
+			negacja(przebieg, askiP, tabelaprawdy);
+			break;
+		case 68:
+		case 100: //D ,v - alternatywa
+			if (i == 0) { askiL = wejscie[i - 1]; }
+			else { askiL = 0; }
+			askiP = wejscie[i + 1];
+
+			if (askiP == 78 || askiP == 110) {
+				wykonaj_F(tabelaprawdy, true, 0, 0, 0, askiP, przebieg, litera);
+				i++;
+			}
+			else
+			{
+				wykonaj_F(tabelaprawdy, false, 0, 0, 0, askiP, przebieg, litera);
+			}
+			przebieg += 1;
+			break;
+		case 67:
+		case 99: //C ,^ - koniukcja
+			if (i == 0) { askiL = wejscie[i - 1]; }
+			else { askiL = 0; }
+			askiP = wejscie[i + 1];
+
+			if (askiP == 78 || askiP == 110) {
+				wykonaj_F(tabelaprawdy, true, 1, 1, 1, askiP, przebieg, litera);
+				i++;
+			}
+			else
+			{
+				wykonaj_F(tabelaprawdy, false, 1, 1, 1, askiP, przebieg, litera);
+			}
+			przebieg += 1;
+			break;
+		default:
+			break;
+		}
+
+#if DBG==1 
+		podglad_tabeli_dbg(tabelaprawdy);
+#endif
+	}
+	if (b - a == 1 && a != 0)
+	{
+			if (przypadek == 0) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
+			else if (przypadek == 1 || przypadek == 2) {
+				if (wejscie[i-1] == 80 || wejscie[i-1] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
+				else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][1]; }
+			}
+			else if (przypadek == 3)
+			{
+				if (wejscie[i-1] == 81 || wejscie[i - 1] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
+				else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][1]; }
+			}
+			else
+			{
+				if (wejscie[i - 1] == 80 || wejscie[i - 1] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
+				else if (wejscie[i - 1] == 81 || wejscie[i - 1] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][1]; }
+				else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][2]; }
+			}
+			cout << "robione " << endl;
+			przebieg += 1;
+			return false;
+	}
+	return true;
+}
+
 bool rachunek_logiczny(bool** &tabelaprawdy)
 {
-	short rodz_litera = 10,litera = 0;
-	int aski1, askiL, askiP;
+	short litera = 0, startowa = 0,koncowa = 0,ostatni = 0;
+	int askiL, askiP;
 	if (wejscie.length() < 1) { return false; }
 
-	int przebieg = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
+	short przebieg = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
 	if (wejscie[0] != 78 && wejscie[0] != 110) // N
 	{ 
@@ -193,203 +331,42 @@ bool rachunek_logiczny(bool** &tabelaprawdy)
 			else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][2]; }
 		}
 	}
-
 #if DBG==1 
 	podglad_tabeli_dbg(tabelaprawdy);
 #endif
 
-	for (int i = 0; i < wejscie.length()-1; i++)
+	startowa = kolejnosc_dzialan(startowa);
+	sprawdz_F(tabelaprawdy,0,startowa, przebieg, litera);
+	if (startowa < wejscie.length()-1) 
 	{
-		aski1 = wejscie[i];
-
-		switch (aski1)
+		while (true)
 		{
-		case 78:
-		case 110: //N ,~ - negacja
-			askiP = wejscie[i + 1];
-			negacja(wym_W,przebieg,przypadek, askiP,tabelaprawdy);
-			break;
-		case 68:
-		case 100: //D ,v - alternatywa
-			if (i == 0) { askiL = wejscie[i - 1]; }
-			else { askiL = 0; }
-			askiP = wejscie[i + 1];
-			
-			if (askiP == 78 || askiP == 110) {
-				negacja(wym_W,przebieg,przypadek, askiP,tabelaprawdy);
-				for (short m = 0; m < wym_W; m++)
-				{
-					if ((tabelaprawdy[m][przebieg - 2] == 0) && (tabelaprawdy[m][przebieg - 1] == 0)) { tabelaprawdy[m][przebieg] = 0; }
-					else { tabelaprawdy[m][przebieg] = 1; }
-				}
-				i++;
-			}
-			else
+			ostatni = przebieg - 1;
+			koncowa = kolejnosc_dzialan(startowa+1);
+			if (sprawdz_F(tabelaprawdy, startowa, koncowa, przebieg, litera) == true) { przebieg += 1; }
+			if (wejscie[startowa] == 73 || wejscie[startowa] == 105)// I
 			{
-				if (rodz_litera != 0) 
-				{
-					if (przypadek == 1 || przypadek == 2) {
-						if (askiP == 80 || askiP == 112) { litera = 0; }
-						else { litera = 1; }
-					}
-					else if (przypadek == 3)
-					{
-						if (askiP == 81 || askiP == 113) { litera = 0; }
-						else { litera = 1; }
-					}
-					else 
-					{
-						if (askiP == 820 || askiP == 112) { litera = 0; }
-						else if (askiP == 81 || askiP == 113) { litera = 1; }
-						else { litera = 2; }
-					}
-				}
 				for (short j = 0; j < wym_W; j++)
 				{
-					if ((tabelaprawdy[j][przebieg - 1] == 0) && (tabelaprawdy[j][litera] == 0)) { tabelaprawdy[j][przebieg] = 0; }
-					else { tabelaprawdy[j][przebieg] = 1; }
+					if ((tabelaprawdy[j][ostatni] == 1) && (tabelaprawdy[j][przebieg-1] == 0)) { tabelaprawdy[j][przebieg] = 0; }
+					else { tabelaprawdy[j][przebieg + 1] = 1; }
 				}
 			}
-			
-			przebieg += 1;
-			break;
-		case 67:
-		case 99: //C ,^ - koniukcja
-			if (i == 0) { askiL = wejscie[i - 1]; }
-			else { askiL = 0; }
-			askiP = wejscie[i + 1];
-
-			if (askiP == 78 || askiP == 110) {
-				negacja(wym_W, przebieg, przypadek, askiP, tabelaprawdy);
-				for (short m = 0; m < wym_W; m++)
-				{
-					if (tabelaprawdy[m][przebieg - 2] == 1 && tabelaprawdy[m][przebieg - 1] == 1) { tabelaprawdy[m][przebieg] = 1; }
-					else { tabelaprawdy[m][przebieg] = 0; }
-				}
-				i++;
-			}
-			else
+			else if (wejscie[startowa] == 69 || wejscie[startowa] == 101)// E
 			{
-				if (rodz_litera != 0) {
-					if (przypadek == 1 || przypadek == 2) {
-						if (askiP == 80 || askiP == 112) { litera = 0; }
-						else { litera = 1; }
-					}
-					else if (przypadek == 3)
-					{
-						if (askiP == 81 || askiP == 113) { litera = 0; }
-						else { litera = 1; }
-					}
-					else
-					{
-						if (askiP == 80 || askiP == 112) { litera = 0; }
-						else if (askiP == 81 || askiP == 113) { litera = 1; }
-						else { litera = 2; }
-					}
-				}
 				for (short j = 0; j < wym_W; j++)
 				{
-					if (tabelaprawdy[j][przebieg - 1] == 1 && tabelaprawdy[j][litera] == 1) { tabelaprawdy[j][przebieg] = 1; }
+					if ((tabelaprawdy[j][ostatni] == 1 && tabelaprawdy[j][przebieg-1] == 1) || (tabelaprawdy[j][ostatni] == 0 && tabelaprawdy[j][przebieg-1] == 0)) { tabelaprawdy[j][przebieg] = 1; }
 					else { tabelaprawdy[j][przebieg] = 0; }
 				}
 			}
-			przebieg += 1;
-			break;
-		case 73:
-		case 105: //I ,=> - implikacja
-			if (i == 0) { askiL = wejscie[i - 1]; }
-			else { askiL = 0; }
-			askiP = wejscie[i + 1];
-
-
-			if (askiP == 78 || askiP == 110) {
-				negacja(wym_W, przebieg, przypadek, askiP, tabelaprawdy);
-				for (short m = 0; m < wym_W; m++)
-				{
-					if (tabelaprawdy[m][przebieg - 2] == 1 && tabelaprawdy[m][przebieg - 1] == 0) { tabelaprawdy[m][przebieg] = 0; }
-					else { tabelaprawdy[m][przebieg] = 1; }
-				}
-				i++;
-			}
-			else
-			{
-				if (rodz_litera != 0)
-				{
-					if (przypadek == 1 || przypadek == 2) {
-						if (askiP == 80 || askiP == 112) { litera = 0; }
-						else { litera = 1; }
-					}
-					else if (przypadek == 3)
-					{
-						if (askiP == 81 || askiP == 113) { litera = 0; }
-						else { litera = 1; }
-					}
-					else
-					{
-						if (askiP == 80 || askiP == 112) { litera = 0; }
-						else if (askiP == 81 || askiP == 113) { litera = 1; }
-						else { litera = 2; }
-					}
-				}
-				for (short j = 0; j < wym_W; j++)
-				{
-					if (tabelaprawdy[j][przebieg - 1] == 1 && tabelaprawdy[j][litera] == 0) { tabelaprawdy[j][przebieg] = 0; }
-					else { tabelaprawdy[j][przebieg] = 1; }
-				}
-			}
-
-			przebieg += 1;
-			break;
-		case 69:
-		case 101: //E, <=> - równoważnosc
-			if (i == 0) { askiL = wejscie[i - 1]; }
-			else { askiL = 0; }
-			askiP = wejscie[i + 1];
-
-			if (askiP == 78 || askiP == 110) {
-				negacja(wym_W, przebieg, przypadek, askiP, tabelaprawdy);
-				for (short m = 0; m < wym_W; m++)
-				{
-					if ((tabelaprawdy[m][przebieg - 2] == 1 && tabelaprawdy[m][przebieg - 1] == 1) || (tabelaprawdy[m][przebieg - 2] == 0 && tabelaprawdy[m][przebieg - 1] == 0)) { tabelaprawdy[m][przebieg] = 1; }
-					else { tabelaprawdy[m][przebieg] = 0; }
-				}
-				i++;
-			}
-			else
-			{
-				if (rodz_litera != 0) {
-					if (przypadek == 1 || przypadek == 2) {
-						if (askiP == 80 || askiP == 112) { litera = 0; }
-						else { litera = 1; }
-					}
-					else if (przypadek == 3)
-					{
-						if (askiP == 81 || askiP == 113) { litera = 0; }
-						else { litera = 1; }
-					}
-					else
-					{
-						if (askiP == 80 || askiP == 112) { litera = 0; }
-						else if (askiP == 81 || askiP == 113) { litera = 1; }
-						else { litera = 2; }
-					}
-				}
-				for (short j = 0; j < wym_W; j++)
-				{
-					if ((tabelaprawdy[j][przebieg - 1] == 0 && tabelaprawdy[j][litera] == 0) || (tabelaprawdy[j][przebieg - 1] == 1 && tabelaprawdy[j][litera] == 1)) { tabelaprawdy[j][przebieg] = 1; }
-					else { tabelaprawdy[j][przebieg] = 0; }
-				}
-			}
-			przebieg += 1;
-			break;
-		default:
-			break;
+			if (koncowa == wejscie.length()-1) { break; }
 		}
+	}
 
 #if DBG==1 
-		if (i%2 == 1)podglad_tabeli_dbg(tabelaprawdy);
+	podglad_tabeli_dbg(tabelaprawdy);
 #endif
-	}
 
 	short ilosc_zmiennych = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 	for (short j = 0; j < wym_W; j++)
@@ -415,9 +392,6 @@ int main()
 #endif
 
 	bool** temp = utworz_tablice();
-
-	if (tryb_zaawansowany) { podglad_tabeli_dbg(temp); }
-
 
 	if (rachunek_logiczny(temp) == true) 
 	{
@@ -447,9 +421,6 @@ int main()
 	if (tryb_zaawansowany) { podglad_tabeli_dbg(temp); }
 
 	for (int i = 0; i < wym_W; i++) delete[] temp[i];
-
-	if (tryb_zaawansowany) { podglad_tabeli_dbg(temp); }
-
 	delete[] temp;
 
 	cout << "Program autorstwa Grzegorz Szwarc" << endl;

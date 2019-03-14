@@ -1,9 +1,9 @@
-pcrcq
+pdqepcnr
 1
 ==============================================================================================================
 Instrukcja wprowadzania danych do porgramu:
    W pierwszej linijce nale¿y wprwadziæ zdanie logiczne zgodnie z konwencj¹ (np. pCq) ,wielkosc liter nie ma znaczneia 
-   Czyli wymagana jest konstrukcja wprowadzonego zdania zmienna-dzialanie-zmienna-dzialanie-zmienna ...
+   Czyli wymagana jest konstrukcja zmienna-dzialanie-zmienna-dzialanie-zmienna ...
    Ka¿da zmienna mo¿e byæ poprzedzona negacj¹ (np. NpCNq) . Program wykonuje dzia³ania w kolejnoœci od lewej do prawej. 
 			LEGENDA dzia³añ: 
    N (negation - negacja)

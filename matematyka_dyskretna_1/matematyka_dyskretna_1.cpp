@@ -2,17 +2,15 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
-#include <typeinfo>
 #include <string>
 
 #define DBG 0
 using namespace std;
 
 const string nazwa_pliku = "badanie_zdań_logicznych.txt";
-string wejscie;
-string tryb;
+string wejscie,tryb;
 bool** tabelaprawdy;
-short wym_W, wym_K,przypadek = 10,rodz_litera = 10,ilosc_P, ilosc_Q, ilosc_R;
+short wym_W, wym_K=0,przypadek = 10,rodz_litera = 10,ilosc_P, ilosc_Q, ilosc_R, ilosc_dzialan = 0;
 bool tryb_zaawansowany = false;
 
 
@@ -40,9 +38,9 @@ void utworz_plik(void)
 	fstream plik_wejsciowy(nazwa_pliku,ios::out);
 	plik_wejsciowy << "pcq" << endl << "0" <<endl;
 	plik_wejsciowy << "==============================================================================================================" << endl;
-	plik_wejsciowy << "Instrukcja wprowadzania danych do porgramu:" << endl;
-	plik_wejsciowy << "   W pierwszej linijce należy wprwadzić zdanie logiczne zgodnie z konwencją (np. pCq) ,wielkosc liter nie ma znaczneia "<< endl;
-	plik_wejsciowy << "   Czyli wymagana jest konstrukcja wprowadzonego zdania zmienna-dzialanie-zmienna-dzialanie-zmienna ... Każda zmienna może dodatkowo być poprzedzona negacją (np. NpCNq)" << endl;
+	plik_wejsciowy << "Instrukcja wprowadzania danych do progamu:" << endl;
+	plik_wejsciowy << "   W pierwszej linijce należy wprwadzić zdanie logiczne zgodnie z konwencją (np. pCq) ,wielkosc liter nie ma znacznenia "<< endl;
+	plik_wejsciowy << "   Czyli wymagana jest konstrukcja zmienna-dzialanie-zmienna-dzialanie-zmienna ... itd. Każda zmienna może dodatkowo być poprzedzona negacją (np. NpCNq)" << endl;
 	plik_wejsciowy << "   Program nie obsługuje nawiasów, wykonuje diałania zgodnie z zasadami kolejnosci wykonywania, dla działań równorzednych od lewej do prawej. " << endl;
 	plik_wejsciowy << "		 LEGENDA działań: " << endl;
 	plik_wejsciowy << "   N (negation - negacja)" << endl;
@@ -90,7 +88,7 @@ short kolejnosc_dzialan(short start)
 	return wejscie.length()-1;
 }
 
-inline void negacja(short &przebieg,int &litera, bool** &tabelaprawdy) //liczba wierszy,ktore dzialanie z kolei, przypadek dla 2 litera, odniesienie do litery
+void negacja(short &przebieg,int &litera, bool** &tabelaprawdy) //liczba wierszy,ktore dzialanie z kolei, przypadek dla 2 litera, odniesienie do litery
 {
 	if (wym_W == 2) {
 		tabelaprawdy[0][przebieg] = !tabelaprawdy[0][0];
@@ -100,9 +98,11 @@ inline void negacja(short &przebieg,int &litera, bool** &tabelaprawdy) //liczba 
 		if (przypadek == 1 || przypadek == 2) { // PQ , PR
 			if (litera == 80 || litera == 112) {
 				for (short i = 0; i < 4; i++) tabelaprawdy[i][przebieg] = !tabelaprawdy[i][0];
+				podglad_tabeli_dbg(tabelaprawdy);
 			}
 			else {
 				for (short i = 0; i < 4; i++) tabelaprawdy[i][przebieg] = !tabelaprawdy[i][1];
+				podglad_tabeli_dbg(tabelaprawdy);
 			}
 		}
 		if (przypadek == 3) { // QR
@@ -128,42 +128,50 @@ inline void negacja(short &przebieg,int &litera, bool** &tabelaprawdy) //liczba 
 	przebieg += 1;
 }
 
+void liczba_dzialan(short a,short b)
+{
+	int aski=0;
+	for (short i = a; i <= b; i++)
+	{
+		aski = wejscie[i];
+		if (i == a && (aski == 78 || aski == 110)) { continue; }
+		if (aski == 78 || aski == 110 || aski == 68 || aski == 100 || aski == 67 || aski == 99 || aski == 73 || aski == 105 || aski == 69 || aski == 101) { ilosc_dzialan += 1; }
+	}
+}
+
 bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzupelniona
 {
 	int aski;
-	short ilosc_dzialan = 0;
-
 	for (int i = (wejscie.length() - 1); i >= 0; i--)
 	{
 		aski = wejscie[i];
 		if (aski == 80 || aski == 112) { ilosc_P += 1; }
 		else if (aski == 81 || aski == 113) { ilosc_Q += 1; }
 		else if (aski == 82 || aski == 114) { ilosc_R += 1; }
-		else if (aski == 78 || aski == 110 || aski == 68 || aski == 100 || aski == 67 || aski == 99 || aski == 73 || aski == 105 || aski == 69 || aski == 101) { ilosc_dzialan += 1; }
 	}
-	if (ilosc_dzialan == 0) { return NULL; }
-
-#if DBG == 1
-	cout << ilosc_dzialan << endl;
-#endif
-
 	if (ilosc_P != 0 && ilosc_Q == 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q != 0 && ilosc_R == 0 || ilosc_P == 0 && ilosc_Q == 0 && ilosc_R != 0) { wym_W = 2; przypadek = 0; }
 	else if (ilosc_P != 0 && ilosc_Q != 0 && ilosc_R == 0) { wym_W = 4; przypadek = 1; } // PQ
 	else if (ilosc_P != 0 && ilosc_Q == 0 && ilosc_R != 0) { wym_W = 4; przypadek = 2; } // PR
 	else if (ilosc_P == 0 && ilosc_Q != 0 && ilosc_R != 0) { wym_W = 4; przypadek = 3; } // QR
 	else { wym_W = 8; }
-	wym_K = ilosc_dzialan + !!ilosc_P + !!ilosc_Q + !!ilosc_R;
-
-	if (wejscie[0] != 78 && wejscie[0] != 110) { wym_K += 1; } // N
-
+	
 	short a= kolejnosc_dzialan(0);
-	while (true)
+	liczba_dzialan(0, a);
+	wym_K += 1;
+	if (a != wejscie.length() - 1)
 	{
-		if (a == wejscie.length() - 1) { break; }
-		if (kolejnosc_dzialan(a+1) - a <= 1) { wym_K += 1; }
-		a = kolejnosc_dzialan(a+1);
-		if (a == wejscie.length()-1) { break; }
+		while (true)
+		{
+			wym_K += 1;
+			liczba_dzialan(a+1, kolejnosc_dzialan(a+1));
+			a = kolejnosc_dzialan(a+1);
+			if (a == wejscie.length()-1) { break; }
+		}
 	}
+#if DBG == 1
+	cout << ilosc_dzialan << endl;
+#endif
+	wym_K += ilosc_dzialan + !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
 	bool** tabelaprawdy;
 	tabelaprawdy = new bool*[wym_W];
@@ -214,7 +222,6 @@ void wykonaj_F(bool** tabelaprawdy,bool NEG,short lewa_wspol,short prawa_wspol,s
 	}
 	else
 	{
-		negacja(przebieg, askiP, tabelaprawdy);
 			for (short m = 0; m < wym_W; m++)
 			{
 				if (tabelaprawdy[m][przebieg - 2] == lewa_wspol && tabelaprawdy[m][przebieg - 1] == prawa_wspol) { tabelaprawdy[m][przebieg] = wynik; }
@@ -223,10 +230,38 @@ void wykonaj_F(bool** tabelaprawdy,bool NEG,short lewa_wspol,short prawa_wspol,s
 	}
 }
 
+void dopisywanie(bool** tabelaprawdy,short k,short i,short &przebieg)
+{
+	if (przypadek == 0) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][0]; }
+	else if (przypadek == 1 || przypadek == 2) {
+		if (wejscie[i] == 80 || wejscie[i] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][0]; }
+		else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][1]; }
+	}
+	else if (przypadek == 3)
+	{
+		if (wejscie[i] == 81 || wejscie[i] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][0]; }
+		else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][1]; }
+	}
+	else
+	{
+		if (wejscie[i] == 80 || wejscie[i] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][0]; }
+		else if (wejscie[i] == 81 || wejscie[i] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][1]; }
+		else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][k] = tabelaprawdy[j][2]; }
+	}
+#if DBG == 1
+	cout << "robione " << endl;
+	podglad_tabeli_dbg(tabelaprawdy);
+#endif
+	przebieg += 1;
+}
+
 bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera)
 {
-	int askiP, askiL;
-	short i;
+	int askiP,askiPP;
+	short i,prze = przebieg;
+	if (a == 0 && (wejscie[0] != 78 && wejscie[0] != 110)) { dopisywanie(tabelaprawdy, przebieg, 0, przebieg); }
+	else if (b - a == 1) { dopisywanie(tabelaprawdy, przebieg, a, przebieg); return false; }
+	//else { dopisywanie(tabelaprawdy, przebieg, a, przebieg); }
 	for (i = a; i <= b; i++)
 	{
 		int aski1 = wejscie[i];
@@ -240,11 +275,11 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 			break;
 		case 68:
 		case 100: //D ,v - alternatywa
-			if (i == 0) { askiL = wejscie[i - 1]; }
-			else { askiL = 0; }
 			askiP = wejscie[i + 1];
-
+			if (prze == przebieg) { dopisywanie(tabelaprawdy, przebieg, i-1, przebieg); }
 			if (askiP == 78 || askiP == 110) {
+				askiPP = wejscie[i + 2];
+				negacja(przebieg, askiPP, tabelaprawdy);
 				wykonaj_F(tabelaprawdy, true, 0, 0, 0, askiP, przebieg, litera);
 				i++;
 			}
@@ -256,11 +291,11 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 			break;
 		case 67:
 		case 99: //C ,^ - koniukcja
-			if (i == 0) { askiL = wejscie[i - 1]; }
-			else { askiL = 0; }
 			askiP = wejscie[i + 1];
-
+			if (prze == przebieg) { dopisywanie(tabelaprawdy, przebieg, i-1, przebieg); }
 			if (askiP == 78 || askiP == 110) {
+				askiPP = wejscie[i + 2];
+				negacja(przebieg, askiPP, tabelaprawdy);
 				wykonaj_F(tabelaprawdy, true, 1, 1, 1, askiP, przebieg, litera);
 				i++;
 			}
@@ -278,28 +313,6 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 		podglad_tabeli_dbg(tabelaprawdy);
 #endif
 	}
-	if (b - a == 1 && a != 0)
-	{
-			if (przypadek == 0) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
-			else if (przypadek == 1 || przypadek == 2) {
-				if (wejscie[i-1] == 80 || wejscie[i-1] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
-				else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][1]; }
-			}
-			else if (przypadek == 3)
-			{
-				if (wejscie[i-1] == 81 || wejscie[i - 1] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
-				else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][1]; }
-			}
-			else
-			{
-				if (wejscie[i - 1] == 80 || wejscie[i - 1] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][0]; }
-				else if (wejscie[i - 1] == 81 || wejscie[i - 1] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][1]; }
-				else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][2]; }
-			}
-			cout << "robione " << endl;
-			przebieg += 1;
-			return false;
-	}
 	return true;
 }
 
@@ -311,26 +324,6 @@ bool rachunek_logiczny(bool** &tabelaprawdy)
 
 	short przebieg = !!ilosc_P + !!ilosc_Q + !!ilosc_R;
 
-	if (wejscie[0] != 78 && wejscie[0] != 110) // N
-	{ 
-		przebieg += 1;
-		if (przypadek == 0) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][1] = tabelaprawdy[j][0]; }
-		else if (przypadek == 1 || przypadek == 2) {
-			if (wejscie[0] == 80 || wejscie[0] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][0]; }
-			else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][1]; }
-		}
-		else if (przypadek == 3)
-		{
-			if (wejscie[0] == 81 || wejscie[0] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][0]; }
-			else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][2] = tabelaprawdy[j][1]; }
-		}
-		else
-		{
-			if (wejscie[0] == 80 || wejscie[0] == 112) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][0]; }
-			else if (wejscie[0] == 81 || wejscie[0] == 113) { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][1]; }
-			else { for (short j = 0; j < wym_W; j++) tabelaprawdy[j][3] = tabelaprawdy[j][2]; }
-		}
-	}
 #if DBG==1 
 	podglad_tabeli_dbg(tabelaprawdy);
 #endif
@@ -343,13 +336,14 @@ bool rachunek_logiczny(bool** &tabelaprawdy)
 		{
 			ostatni = przebieg - 1;
 			koncowa = kolejnosc_dzialan(startowa+1);
-			if (sprawdz_F(tabelaprawdy, startowa, koncowa, przebieg, litera) == true) { przebieg += 1; }
+			podglad_tabeli_dbg(tabelaprawdy);
+			sprawdz_F(tabelaprawdy, startowa, koncowa, przebieg, litera);
 			if (wejscie[startowa] == 73 || wejscie[startowa] == 105)// I
 			{
 				for (short j = 0; j < wym_W; j++)
 				{
 					if ((tabelaprawdy[j][ostatni] == 1) && (tabelaprawdy[j][przebieg-1] == 0)) { tabelaprawdy[j][przebieg] = 0; }
-					else { tabelaprawdy[j][przebieg + 1] = 1; }
+					else { tabelaprawdy[j][przebieg] = 1; }
 				}
 			}
 			else if (wejscie[startowa] == 69 || wejscie[startowa] == 101)// E
@@ -361,6 +355,8 @@ bool rachunek_logiczny(bool** &tabelaprawdy)
 				}
 			}
 			if (koncowa == wejscie.length()-1) { break; }
+			przebieg += 1;
+			startowa = koncowa;
 		}
 	}
 
@@ -395,13 +391,11 @@ int main()
 
 	if (rachunek_logiczny(temp) == true) 
 	{
-		cout << endl;
-		cout << " Podane zdanie logiczne jest tautologią !" << endl;
-		cout << endl;
+		cout << endl << " Podane zdanie logiczne jest tautologią !" << endl<< endl;;
 	}
 	else
 	{
-		cout << "Podane zdanie logiczne nie jest tatuologią dla: " << endl;
+		cout << "Podane zdanie logiczne nie jest tautologią dla: " << endl;
 		for (short j = 0; j < wym_W; j++)
 		{
 			if (temp[j][wym_K - 1] == 0)

@@ -38,17 +38,19 @@ void utworz_plik(void)
 	fstream plik_wejsciowy(nazwa_pliku,ios::out);
 	plik_wejsciowy << "pcq" << endl << "0" <<endl;
 	plik_wejsciowy << "==============================================================================================================" << endl;
-	plik_wejsciowy << "Instrukcja wprowadzania danych do progamu:" << endl;
-	plik_wejsciowy << "   W pierwszej linijce należy wprwadzić zdanie logiczne zgodnie z konwencją (np. pCq) ,wielkosc liter nie ma znacznenia "<< endl;
-	plik_wejsciowy << "   Czyli wymagana jest konstrukcja zmienna-dzialanie-zmienna-dzialanie-zmienna ... itd. Każda zmienna może dodatkowo być poprzedzona negacją (np. NpCNq)" << endl;
-	plik_wejsciowy << "   Program nie obsługuje nawiasów, wykonuje diałania zgodnie z zasadami kolejnosci wykonywania, dla działań równorzednych od lewej do prawej. " << endl;
+	plik_wejsciowy << "Instrukcja wprowadzania danych do programu:" << endl;
+	plik_wejsciowy << "   W pierwszej linijce należy wprowadzić zdanie logiczne zgodnie z konwencją zmienna-dzialanie-zmienna-dzialanie-zmienna ... itd."<< endl;
+	plik_wejsciowy << "   Czyli wymagana jest konstrukcja (np. pCq) ,wielkość liter nie ma znaczenia." << endl;
+	plik_wejsciowy << "   Każda zmienna może dodatkowo być poprzedzona negacją (np. NpCNq)." << endl;
+	plik_wejsciowy << "   Program nie obsługuje nawiasów, wykonuje działania zgodnie z zasadami kolejności wykonywania działań,"<< endl;
+	plik_wejsciowy << "   dla działań równorzednych w kolejności od lewej do prawej. " << endl;
 	plik_wejsciowy << "		 LEGENDA działań: " << endl;
 	plik_wejsciowy << "   N (negation - negacja)" << endl;
 	plik_wejsciowy << "   D (disjunction - alternatywa) " << endl;
 	plik_wejsciowy << "   C (conjunction – koniunkcja)" << endl;
 	plik_wejsciowy << "   I (implication – implikacja)" << endl;
 	plik_wejsciowy << "   E (equivalence – równoważnośd)" << endl << endl;
-	plik_wejsciowy << "W drugiej linijce liczba decyduje o włączeniu trybu zawansowanego, powoduje to wyswietlenie tabeli prawdy" << endl;
+	plik_wejsciowy << "W drugiej linijce liczba decyduje o włączeniu trybu zaawansowanego, powoduje to wyświetlenie tabeli prawdy" << endl;
 	plik_wejsciowy << "   0 (wyłączony tryb zaawansowany - domyślny)" << endl;
 	plik_wejsciowy << "   1 (włączony tryb zaawansowany)" << endl;
 	plik_wejsciowy.close();
@@ -98,11 +100,15 @@ void negacja(short &przebieg,int &litera, bool** &tabelaprawdy) //liczba wierszy
 		if (przypadek == 1 || przypadek == 2) { // PQ , PR
 			if (litera == 80 || litera == 112) {
 				for (short i = 0; i < 4; i++) tabelaprawdy[i][przebieg] = !tabelaprawdy[i][0];
+#if DBG == 1
 				podglad_tabeli_dbg(tabelaprawdy);
+#endif
 			}
 			else {
 				for (short i = 0; i < 4; i++) tabelaprawdy[i][przebieg] = !tabelaprawdy[i][1];
+#if DBG == 1
 				podglad_tabeli_dbg(tabelaprawdy);
+#endif
 			}
 		}
 		if (przypadek == 3) { // QR
@@ -258,10 +264,11 @@ void dopisywanie(bool** tabelaprawdy,short k,short i,short &przebieg)
 bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera)
 {
 	int askiP,askiPP;
+	bool czy_dzialano = false;
 	short i,prze = przebieg;
 	if (a == 0 && (wejscie[0] != 78 && wejscie[0] != 110)) { dopisywanie(tabelaprawdy, przebieg, 0, przebieg); }
 	else if (b - a == 1) { dopisywanie(tabelaprawdy, przebieg, a, przebieg); return false; }
-	//else { dopisywanie(tabelaprawdy, przebieg, a, przebieg); }
+	//else if (){ dopisywanie(tabelaprawdy, przebieg, a, przebieg); }
 	for (i = a; i <= b; i++)
 	{
 		int aski1 = wejscie[i];
@@ -272,6 +279,7 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 		case 110: //N ,~ - negacja
 			askiP = wejscie[i + 1];
 			negacja(przebieg, askiP, tabelaprawdy);
+			czy_dzialano = true;
 			break;
 		case 68:
 		case 100: //D ,v - alternatywa
@@ -287,6 +295,7 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 			{
 				wykonaj_F(tabelaprawdy, false, 0, 0, 0, askiP, przebieg, litera);
 			}
+			czy_dzialano = true;
 			przebieg += 1;
 			break;
 		case 67:
@@ -303,6 +312,7 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 			{
 				wykonaj_F(tabelaprawdy, false, 1, 1, 1, askiP, przebieg, litera);
 			}
+			czy_dzialano = true;
 			przebieg += 1;
 			break;
 		default:
@@ -313,6 +323,7 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 		podglad_tabeli_dbg(tabelaprawdy);
 #endif
 	}
+	if (czy_dzialano == false && prze == przebieg) { dopisywanie(tabelaprawdy, przebieg, a+1, przebieg); }
 	return true;
 }
 
@@ -336,8 +347,10 @@ bool rachunek_logiczny(bool** &tabelaprawdy)
 		{
 			ostatni = przebieg - 1;
 			koncowa = kolejnosc_dzialan(startowa+1);
-			podglad_tabeli_dbg(tabelaprawdy);
 			sprawdz_F(tabelaprawdy, startowa, koncowa, przebieg, litera);
+#if DBG == 1
+			podglad_tabeli_dbg(tabelaprawdy);
+#endif
 			if (wejscie[startowa] == 73 || wejscie[startowa] == 105)// I
 			{
 				for (short j = 0; j < wym_W; j++)

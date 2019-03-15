@@ -1,9 +1,9 @@
 ﻿  matematyka_dyskretna_1.cpp
 c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(88): warning C4267: "return": konwersja z "size_t" do "short", możliwa utrata danych
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(145): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(219): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(227): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(322): warning C4101: "askiP": lokalna zmienna, do której nie istnieje odwołanie
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(322): warning C4101: "askiL": lokalna zmienna, do której nie istnieje odwołanie
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(386): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(149): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(223): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(231): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(331): warning C4101: "askiP": lokalna zmienna, do której nie istnieje odwołanie
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(331): warning C4101: "askiL": lokalna zmienna, do której nie istnieje odwołanie
+c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(397): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
   matematyka_dyskretna_1.vcxproj -> C:\Users\Grzesiek\source\repos\matematyka_dyskretna_1\x64\Debug\matematyka_dyskretna_1.exe

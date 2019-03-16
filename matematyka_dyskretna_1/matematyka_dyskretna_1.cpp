@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <time.h>
+#include <Windows.h>
 
 #define DBG 0
 using namespace std;
@@ -12,7 +14,8 @@ string wejscie,tryb;
 bool** tabelaprawdy;
 short wym_W, wym_K=0,przypadek = 10,rodz_litera = 10,ilosc_P, ilosc_Q, ilosc_R, ilosc_dzialan = 0;
 bool tryb_zaawansowany = false;
-
+clock_t start, stop;
+double czas;
 
 bool pobierz_dane_plik(void)
 {
@@ -388,6 +391,7 @@ bool rachunek_logiczny(bool** &tabelaprawdy)
 
 int main()
 {
+	start = clock();
 	setlocale(LC_CTYPE, ".1250");
 
 	if (pobierz_dane_plik() == false) 
@@ -429,6 +433,10 @@ int main()
 
 	for (int i = 0; i < wym_W; i++) delete[] temp[i];
 	delete[] temp;
+
+	stop = clock();
+	czas = (double)(stop - start) / CLOCKS_PER_SEC;
+	if (tryb_zaawansowany) { cout << "Wykonanie programu trwało: " << czas << endl << endl; }
 
 	cout << "Program autorstwa Grzegorz Szwarc" << endl;
 	system("pause");

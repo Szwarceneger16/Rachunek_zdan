@@ -1,4 +1,4 @@
-pcqinpdnqeqirepcnq
+(pcq)e(npc(pcriq)cq)d((piq)c(qir))i(pir)
 1
 ==============================================================================================================
 Instrukcja wprowadzania danych do progamu:
@@ -15,3 +15,7 @@ Instrukcja wprowadzania danych do progamu:
 W drugiej linijce liczba decyduje o w³¹czeniu trybu zawansowanego, powoduje to wyswietlenie tabeli prawdy
    0 (wy³¹czony tryb zaawansowany - domyœlny)
    1 (w³¹czony tryb zaawansowany)
+pdrc(qerdp)ir
+(pcq)e(npc(pcriq)cq)
+((piq)c(qir))i(pir)
+(peq)e((piq)c(qip))

@@ -1,11 +1,1 @@
-﻿  matematyka_dyskretna_1.cpp
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(128): warning C4267: "return": konwersja z "size_t" do "short", możliwa utrata danych
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(225): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(317): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(325): warning C4805: "==": niebezpieczne połączenie typu "bool" oraz typu "short" w operacji
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(445): warning C4101: "askiP": lokalna zmienna, do której nie istnieje odwołanie
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(445): warning C4101: "askiL": lokalna zmienna, do której nie istnieje odwołanie
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(565): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(571): warning C4267: "=": konwersja z "size_t" do "short", możliwa utrata danych
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(109): warning C4715: "przewin_bez”: niewszystkie ścieżki kodu zwracają wartość
-  matematyka_dyskretna_1.vcxproj -> C:\Users\Grzesiek\source\repos\matematyka_dyskretna_1\x64\Debug\matematyka_dyskretna_1.exe
+﻿  matematyka_dyskretna_1.vcxproj -> C:\Users\Grzesiek\source\repos\matematyka_dyskretna_1\x64\Debug\matematyka_dyskretna_1.exe

@@ -273,7 +273,7 @@ bool** utworz_tablice() //tworzy dynamiczna tablice o odpowiednym wymiarze, uzup
 
 	short a= kolejnosc_dzialan_EI_obliczanie(0);
 	liczba_dzialan(0, a);
-	wym_K += 1;
+	wym_K += 2;
 	if (a != wejscie.length() - 1)
 	{
 		while (true)
@@ -384,7 +384,7 @@ bool sprawdz_F(bool** tabelaprawdy,short a,short b,short &przebieg,short &litera
 	else if (wejscie[a] == 40 && miejsce_naw[a] != -1) 
 	{ 
 		for (short j = 0; j < wym_W; j++) tabelaprawdy[j][przebieg] = tabelaprawdy[j][miejsce_naw[a_pocz]]; 
-		a = przewin_bez(a); przebieg++; czy_dzialano = true; wpisano_nawias = true;
+		a = przewin_bez(a,b); przebieg++; czy_dzialano = true; wpisano_nawias = true;
 	}
 	else if (b - a == 1) { dopisywanie(tabelaprawdy, przebieg, a, przebieg); return false; }
 	

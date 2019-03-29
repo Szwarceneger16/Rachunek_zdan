@@ -46,7 +46,7 @@ void utworz_plik(void)
 	plik_wejsciowy << "   W pierwszej linijce należy wprowadzić zdanie logiczne zgodnie z konwencją zmienna-dzialanie-zmienna-dzialanie-zmienna ... itd."<< endl;
 	plik_wejsciowy << "   Czyli wymagana jest konstrukcja (np. pCq) ,wielkość liter nie ma znaczenia." << endl;
 	plik_wejsciowy << "   Każda zmienna może dodatkowo być poprzedzona negacją (np. NpCNq)." << endl;
-	plik_wejsciowy << "   Program nie obsługuje nawiasów, wykonuje działania zgodnie z zasadami kolejności wykonywania działań,"<< endl;
+	plik_wejsciowy << "   Program obsługuje również nawiasy, działania wykonuje zgodnie z zasadami kolejności wykonywania działań,"<< endl;
 	plik_wejsciowy << "   dla działań równorzednych w kolejności od lewej do prawej. " << endl;
 	plik_wejsciowy << "		 LEGENDA działań: " << endl;
 	plik_wejsciowy << "   N (negation - negacja)" << endl;

@@ -10,9 +10,8 @@ c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\mat
 c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(587): warning C4067: nieoczekiwane tokeny występujące po dyrektywie preprocesora - oczekiwano nowego wiersza
 c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(593): warning C4267: "=": konwersja z "size_t" do "short", możliwa utrata danych
   Trwa generowanie kodu
-c:\users\grzesiek\source\repos\matematyka_dyskretna_1\matematyka_dyskretna_1\matematyka_dyskretna_1.cpp(131): warning C4715: "przewin_bez”: niewszystkie ścieżki kodu zwracają wartość
-  8 of 193 functions ( 4.1%) were compiled, the rest were copied from previous compilation.
+  1 of 193 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    18 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   matematyka_dyskretna_1.vcxproj -> C:\Users\Grzesiek\source\repos\matematyka_dyskretna_1\Release\matematyka_dyskretna_1.exe
